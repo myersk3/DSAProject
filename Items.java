@@ -10,6 +10,11 @@ public class Items {
 		this.numItems = numItems;
 	}
 	
+	public String getName()
+	{
+		return name;	
+	}
+	
 	public int getAmount()
 	{
 		return numItems;
