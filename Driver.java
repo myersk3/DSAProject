@@ -52,6 +52,39 @@ public class Driver {
 		System.out.println();
 	}while(!done);
     }
+	
+	private static void addStock() throws IOException
+    	{
+		MyCDLS<Items> i = new MyCDLS<>();
+    		System.out.println("Welcome to the Shopping Center!!!");
+    		System.out.println("");
+    		System.out.println("Please specify stock.");
+    		System.out.print("How many items do you have? ");
+    		String number = stdin.readLine().trim();
+    		int num = Integer.parseInt(number);
+    	
+    		System.out.print("Please specify restocking amount: ");
+    		String restock = stdin.readLine().trim();
+    		int restockNum = Integer.parseInt(restock);
+    		int count = 1;
+    		int size = i.size();
+    		while(count <= num)
+    		{
+    			System.out.print("Enter item name: ");
+    			String name = stdin.readLine().trim();
+    			System.out.print("How many " + name + "s? ");
+    			String s = stdin.readLine().trim();
+    			int numItems = Integer.parseInt(s);
+    			Items curr = new Items(restockNum, name, numItems);
+    			i.add(size, curr);
+    			System.out.println(numItems + " items of " + name + " have been placed in stock.");
+    			count++;
+    		}
+    		System.out.println("Please select the checkout line that should check out customers first");
+    		System.out.print("(regular1 / regular2 / express): ");
+    		String answer = stdin.readLine().trim();
+    		System.out.println("");
+    }
 
 
     private static int searchItems(ListCDLBased<Item> items, String itemName) {
