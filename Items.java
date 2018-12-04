@@ -20,6 +20,11 @@ public class Items {
 		return numItems;
 	}
 	
+	public int getRestock()
+	{
+		return restockAmount;
+	}
+	
 	public void decrease() //need to check if numItems > 0 in driver
 	{
 		numItems = numItems - 1;
