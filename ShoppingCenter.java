@@ -14,6 +14,11 @@ public class ShoppingCenter {
 		checkoutLines.add(2, new QueueRA<Customer>());
 		minutes = 0;
 	}
+	
+	public int getMinutes()
+	{
+		return minutes;
+	}
 
 	public ListCDLBased<Customer> getShoppingCustomers() {
 		return shoppingCustomers;
