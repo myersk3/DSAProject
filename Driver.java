@@ -87,38 +87,46 @@ public class Driver {
     }
 
 
-    private static int searchItems(ListCDLBased<Item> items, String itemName) {
-	    int result = -1;
-	    String key = "";
-	    for(int i = 0; i < items.size(); i++) {
-		    key = (String) items.get(i).getName();
-	    }
+	private static int searchItems(ListCDLBased<Item> items, String itemName) {
+            int result = -1;
+            String key = "";
+            for(int i = 0; i < items.size(); i++) {
+                    key = (String) items.get(i).getName();
+                    if(key.equals(item)) {
+                            result = i;
+                            i = list.size();
+                    }
+
+            }
+            return result;
     }
+
 
     private static ShoppingCenter pickItem(ShoppingCenter sc) {
-	    System.out.print("Choose a shopping customer: ");
-	    String customerName = stdin.readLine().trim();
-	    System.out.println(customer);
-	    System.out.print("Choose an item: ");
-	    String itemName = stdin.readLine().trim();
-	    System.out.println(itemName);
-	    int itemNum = items.search(item);
-	    if(itemNum >= 0) {
-		    Items item = items.get(itemNum);
-		    if(item.getAmount() > 0) {
-			    item.decrease();
-		    }
-		    else {
-			    System.out.println("Item is out of stock");
-		    }
-	    }
-	    else {
-		    System.out.println("Item does not exist");
-	    }
-	    return items;
+            System.out.print("Choose a shopping customer: ");
+            String customerName = stdin.readLine().trim();
+            System.out.println(customer);
+            System.out.print("Choose an item: ");
+            String itemName = stdin.readLine().trim();
+            System.out.println(itemName);
+            int itemNum = items.search(item);
+            if(itemNum >= 0) {
+                    Items item = items.get(itemNum);
+                    if(item.getAmount() > 0) {
+                            item.decrease();
+                    }
+                    else {
+                            System.out.println("Item is out of stock");
+                    }
+            }
+            else {
+                    System.out.println("Item does not exist");
+            }
+            return sc;
     }
 
-    private static AscendinglyOrderedStringList<Customer> finishShopping(AscendinglyOrderedStringList<Customer> shoppingCustomers, ListCDLBased<ListCDLBased<Customer>> checkoutLines) {
+
+    private static ShoppingCenter finishShopping(ShoppingCenter sc) {
 	    if(!shoppingCustomers.isEmpty()) {
 		    Customer customer = ShoppingCustomers.get(0);
 		    if(customer.getTime == time) {
@@ -144,20 +152,18 @@ public class Driver {
 				    }
 			    }
 			    shoppingCustomers.remove(0);
-				    
-
-
-	    
+		    }
+	    }    
     }
 
-    private static void printItems(AscendinglyOrderedStringList<Items> items) {
+    private static void printItems(ShoppingCenter sc) {
 	    System.out.println("Printing items...");
 	    for(int i = 0; i < items.size(); i++) {
 		    System.out.print(item.printItems() + " ");
 	    }
     }
 
-    private static AscendinglyOrderedStringList<Items> reorderItem(AscendinglyOrderedStringList<Items> items) {
+    private static ShoppingCenter reorderItem(ShoppingCenter sc) {
 	    System.out.print("Name the item to be reordered: ");
 	    String itemName = stdin.readLine().trim();
 	    System.out.println(itemName);
@@ -175,6 +181,6 @@ public class Driver {
 	    else {
 		    System.out.println("Cannot restock less than 1 item.");
 	    }
-	    return items;
+	    return sc;
     }
 }
