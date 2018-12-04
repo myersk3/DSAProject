@@ -4,8 +4,9 @@ public class ShoppingCenter {
 	private ListCDLBased<Items> items;
 	private ListCDLBased<QueueRA<Customer>> checkoutLines;
 	private int minutes;
+	private int currentCheckoutLine;
 
-	public ShoppingCenter() {
+	public ShoppingCenter(int firstLine) {
 		shoppingCustomers = new ListCDLBased<Customer>();
 		items = new ListCDLBased<Items>();
 		checkoutLines = new ListCDLBased<QueueRA<Customer>>();
@@ -13,7 +14,19 @@ public class ShoppingCenter {
 		checkoutLines.add(1, new QueueRA<Customer>());
 		checkoutLines.add(2, new QueueRA<Customer>());
 		minutes = 0;
+		currentCheckoutLine = firstLine;
 	}
+	
+	public QueueRA<Customer> getCurrentCheckoutLine() {
+                QueueRA<Customer> line = checkoutlines.get(currentCheckoutLine);
+                if(currentCheckoutLine < 3) {
+                        currentCheckoutLine++;
+                }
+                else {
+                        currentCheckoutLine = 0;
+                }
+                return line;
+        }
 	
 	public int getMinutes()
 	{
