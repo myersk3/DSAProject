@@ -5,7 +5,51 @@ public class Driver {
     static BufferedReader stdin = new BufferedReader (new InputStreamReader(System.in));
 
     public static void main(String args[]) throws IOException throws IOException{
-	ShoppingCenter sc = new ShoppingCenter();
+	MyCDLS<Items> i = new MyCDLS<>();
+    	int result = 0;
+    	System.out.println("Welcome to the Shopping Center!!!");
+    	System.out.println("");
+    	System.out.println("Please specify stock.");
+    	System.out.print("How many items do you have? ");
+    	String number = stdin.readLine().trim();
+    	int num = Integer.parseInt(number);
+    	
+    	System.out.print("Please specify restocking amount: ");
+    	String restock = stdin.readLine().trim();
+    	int restockNum = Integer.parseInt(restock);
+    	int count = 1;
+    	int size = i.size();
+    	while(count <= num)
+    	{
+    		System.out.print("Enter item name: ");
+    		String name = stdin.readLine().trim();
+    		System.out.print("How many " + name + "s? ");
+    		String s = stdin.readLine().trim();
+    		int numItems = Integer.parseInt(s);
+    		Items curr = new Items(restockNum, name, numItems);
+    		i.add(size, curr);
+    		System.out.println(numItems + " items of " + name + " have been placed in stock.");
+    		count++;
+    	}
+    	System.out.println("Please select the checkout line that should check out customers first");
+    	System.out.print("(regular1 / regular2 / express): ");
+    	String answer = stdin.readLine().trim();
+    	System.out.println("");
+    	
+    	if(answer.equals("regular1"))
+    	{
+    		result = 0;
+    	}
+    	else if(answer.equals("regular2"))
+    	{
+    		result = 1;
+    	}
+    	else if(answer.equals("express"))
+    	{
+    		result = 2;
+    	}
+    	ShoppingCenter sc = new ShoppingCenter(result);
+    	sc.setItems(i); //setting Items list
 
         System.out.println("0. Close the Shopping Center.");
 	System.out.println("1. Customer enters Shopping Center.");
@@ -53,38 +97,24 @@ public class Driver {
 	}while(!done);
     }
 	
-	private static void addStock() throws IOException
+	private static void addCustomer(ShoppingCenter sc) throws IOException
     	{
-		MyCDLS<Items> i = new MyCDLS<>();
-    		System.out.println("Welcome to the Shopping Center!!!");
-    		System.out.println("");
-    		System.out.println("Please specify stock.");
-    		System.out.print("How many items do you have? ");
-    		String number = stdin.readLine().trim();
-    		int num = Integer.parseInt(number);
-    	
-    		System.out.print("Please specify restocking amount: ");
-    		String restock = stdin.readLine().trim();
-    		int restockNum = Integer.parseInt(restock);
-    		int count = 1;
-    		int size = i.size();
-    		while(count <= num)
-    		{
-    			System.out.print("Enter item name: ");
-    			String name = stdin.readLine().trim();
-    			System.out.print("How many " + name + "s? ");
-    			String s = stdin.readLine().trim();
-    			int numItems = Integer.parseInt(s);
-    			Items curr = new Items(restockNum, name, numItems);
-    			i.add(size, curr);
-    			System.out.println(numItems + " items of " + name + " have been placed in stock.");
-    			count++;
-    		}
-    		System.out.println("Please select the checkout line that should check out customers first");
-    		System.out.print("(regular1 / regular2 / express): ");
-    		String answer = stdin.readLine().trim();
-    		System.out.println("");
-    }
+    	MyCDLS<Customer> shoppingCust = sc.getShoppingCustomers();
+    	System.out.print("Enter customer name: ");
+		String name = stdin.readLine().trim();
+		int index = searchName(name, shoppingCust);
+		if(index < shoppingCust.size())
+		{
+			System.out.println("Customer " + name + " is already in the Shopping Center!");
+		}
+		else
+		{
+			Customer c = new Customer(name, sc.getMinutes());
+			shoppingCust.add(shoppingCust.size(), c);
+			System.out.println("Customer " + name + " is now in the Shopping Center.");
+		}
+		sc.setShoppingCustomers(shoppingCust);
+    	}
 
 
 	private static int searchItems(ListCDLBased<Item> items, String itemName) {
@@ -99,7 +129,7 @@ public class Driver {
 
             }
             return result;
-    }
+    	}
 
 
     private static ShoppingCenter pickItem(ShoppingCenter sc) {
@@ -124,6 +154,40 @@ public class Driver {
             }
             return sc;
     }
+	
+	private static void removeItem(ShoppingCenter sc) throws IOException
+    	{
+    		MyCDLS<Customer> shoppingCust = sc.getShoppingCustomers();
+    		if(shoppingCust.isEmpty())
+    		{
+    			System.out.println("No one is in the Shopping Center!");
+    		}
+    		else
+    		{
+    			System.out.print("Enter Customer name: ");
+    			String name = stdin.readLine().trim();
+    			int index = searchName(name, shoppingCust);
+    			if(index == shoppingCust.size())
+    			{
+    				System.out.println("There is no customer by that name.");
+    			}
+    			else
+    			{
+    				Customer curr = shoppingCust.get(index);
+    				if(curr.getNumItems() == 0)
+    				{
+    					System.out.println("Customer has 0 items, cannot remove anymore.");
+    				}
+    				else
+    				{
+    					curr.decreaseNumItems();
+            				System.out.print("Customer " + curr.getName() + " now has ");
+            				System.out.println(curr.getNumItems() + " items in the shopping cart.");
+    				}
+    			}
+    		}
+    		sc.setShoppingCustomers(shoppingCust);
+    	}
 
 
     private static ShoppingCenter finishShopping(ShoppingCenter sc) {
@@ -155,6 +219,28 @@ public class Driver {
 		    }
 	    }    
     }
+	
+	private static void printCustomers(ShoppingCenter sc)
+    	{
+    		MyCDLS<Customer> shoppingCust = sc.getShoppingCustomers();
+    		if(shoppingCust.isEmpty())
+    		{
+    			System.out.println("No customers are in the Shopping Center!");
+    		}
+    		else
+    		{
+    			int size = shoppingCust.size();
+        		System.out.print("The following "+ size + " customers");
+        		System.out.println(" are in the Shopping Center.");
+        		int index = 0;
+        		while(index < size)
+        		{
+        			Customer curr = shoppingCust.get(index);
+        			System.out.println("Customer " + curr.getName() + " with " + curr.getNumItems() + " items.");
+        			index++;
+        		}
+    		}
+    	}
 
     private static void printItems(ShoppingCenter sc) {
 	    System.out.println("Printing items...");
@@ -162,6 +248,20 @@ public class Driver {
 		    System.out.print(item.printItems() + " ");
 	    }
     }
+	
+	private static void printItems(ShoppingCenter sc) { //Kaitlyn's adjusted printItems
+    		MyCDLS<Items> items = sc.getItems();
+    		int restock = items.get(0).getRestock();
+    	
+	    	System.out.println("Items at restocking level: ");
+	    	for(int i = 0; i < items.size(); i++) {
+	    		Items curr = items.get(i);
+		    	if(curr.getAmount() <= restock)
+		    	{
+		    		System.out.println(curr.getName() + " with " + curr.getAmount() + " items.");
+		    	}
+	    	}
+    	}
 
     private static ShoppingCenter reorderItem(ShoppingCenter sc) {
 	    System.out.print("Name the item to be reordered: ");
