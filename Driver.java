@@ -130,6 +130,36 @@ public class Driver {
             }
             return result;
     	}
+	
+	private static int searchName(String name, MyCDLS sc) //Kaitlyn's search method
+	{
+		int index=0;
+		boolean notFound = true;
+		
+		while(notFound&&(index < sc.size()))
+		{
+			Customer curr = (Customer) sc.get(index);
+			String next = curr.getName();
+			if(next.equals(name))
+			{
+				notFound = false;
+			}
+			else
+			{
+				index++;
+			}
+		}
+		if(notFound)
+		{
+			//not found
+			return index; //will return collection size
+		}
+		else
+		{
+			//found
+			return index; //will return correct index
+		}
+	}
 
 
     private static ShoppingCenter pickItem(ShoppingCenter sc) {
