@@ -51,16 +51,17 @@ public class Driver {
     	ShoppingCenter sc = new ShoppingCenter(result);
     	sc.setItems(i); //setting Items list
 
-        System.out.println("0. Close the Shopping Center.");
-	System.out.println("1. Customer enters Shopping Center.");
-	System.out.println("2. Customer picks an item and places it in the shopping cart");
-	System.out.println("3. Customer removes an item fro mthe shopping cart.");
-	System.out.println("4. Customer is done shopping.");
-	System.out.println("5. Customer checks out.");
-	System.out.println("6. Print info about customers who are shopping.");
-	System.out.println("7. Print info about customers in checkout lines.");
-	System.out.println("8. Print info about items at or below re-stocking level.");
-	System.out.println("9. Reorder and item.");
+	System.out.println("Here are the choices to select from: ");
+        System.out.println("	0. Close the Shopping Center.");
+	System.out.println("	1. Customer enters Shopping Center.");
+	System.out.println("	2. Customer picks an item and places it in the shopping cart.");
+	System.out.println("	3. Customer removes an item from the shopping cart.");
+	System.out.println("	4. Customer is done shopping.");
+	System.out.println("	5. Customer checks out.");
+	System.out.println("	6. Print info about customers who are shopping.");
+	System.out.println("	7. Print info about customers in checkout lines.");
+	System.out.println("	8. Print info about items at or below re-stocking level.");
+	System.out.println("	9. Reorder and item.");
 
 	boolean done = false;
         int choice = 0;
@@ -71,21 +72,21 @@ public class Driver {
 		switch(choice) {
 			case 0: done = true;
 				break;
-			case 1: 
+			case 1: addCustomer(sc);
 				break;
 			case 2: 
 				break;
-			case 3: 
+			case 3: removeItem(sc);
 				break;
 			case 4:
 				break;
 			case 5:
 				break;
-			case 6: 
+			case 6: printCustomers(sc);
 				break;
 			case 7:
 				break;
-			case 8:
+			case 8: printItems(sc);
 				break;
 			case 9:
 				break;
