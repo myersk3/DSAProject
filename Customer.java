@@ -21,9 +21,17 @@ public class Customer {
 	public int getNumItems() {
 		return numItems;
 	}
-
+	
 	public void setNumItems(int numItems) {
 		this.numItems = numItems;
+	}
+
+	public void increaseNumItems() { //added
+		numItems++;
+	}
+	
+	public void decreaseNumItems() { //added
+		numItems--;
 	}
 
 	public int getTimeEntered() {
