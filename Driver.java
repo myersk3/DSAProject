@@ -117,22 +117,27 @@ public class Driver {
     
     private static void addCustomer(ShoppingCenter sc) throws IOException
     {
-    	MyCDLS<Customer> shoppingCust = sc.getShoppingCustomers();
-    	System.out.print("Enter customer name: ");
-		String name = stdin.readLine().trim();
-		System.out.println(name);
-		int index = searchCustomers(shoppingCust, name);
-		if(index != -1)
-		{
-			System.out.println("Customer " + name + " is already in the Shopping Center!");
-		}
-		else
-		{
-			Customer c = new Customer(name, sc.getMinutes());
-			shoppingCust.add(shoppingCust.size(), c);
-			System.out.println("Customer " + name + " is now in the Shopping Center.");
-		}
-		sc.setShoppingCustomers(shoppingCust);
+    	boolean done = false;
+    	do
+    	{
+    		MyCDLS<Customer> shoppingCust = sc.getShoppingCustomers();
+        	System.out.print("Enter customer name: ");
+    		String name = stdin.readLine().trim();
+    		System.out.println(name);
+    		int index = searchCustomers(shoppingCust, name);
+    		if(index != -1)
+    		{
+    			System.out.println("Customer " + name + " is already in the Shopping Center!");
+    		}
+    		else
+    		{
+    			Customer c = new Customer(name, sc.getMinutes());
+    			shoppingCust.add(shoppingCust.size(), c);
+    			System.out.println("Customer " + name + " is now in the Shopping Center.");
+    			done = true;
+    		}
+    		sc.setShoppingCustomers(shoppingCust);
+    	} while(!done);
     }
 
     /**
