@@ -2,7 +2,7 @@
  * A class that imitates a customer in a shopping center
  *
  * @author Jared Tebbi
- * @version %I% %G%
+ * @version 2018.12.09
  */
 public class Customer {
 
@@ -61,14 +61,14 @@ public class Customer {
 	/**
 	* Increases the number of items this customer has in their cart by 1.
 	*/
-	public void increaseNumItems() { //added
+	public void increaseNumItems() {
 		numItems++;
 	}
 	
 	/**
 	* Decreases the number of items this customer has in their cart by 1.
 	*/
-	public void decreaseNumItems() { //added
+	public void decreaseNumItems() {
 		numItems--;
 	}
 
