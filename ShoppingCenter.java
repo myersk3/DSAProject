@@ -35,13 +35,18 @@ public class ShoppingCenter {
 	 */
 	public QueueRA<Customer> getCurrentCheckoutLine() {
 		QueueRA<Customer> line = checkoutLines.get(currentCheckoutLine);
+		return line;
+	}
+	
+	public void setCurrentCheckoutLine(QueueRA<Customer> customers) {
+		checkoutLines.remove(currentCheckoutLine);
+		checkoutLines.add(currentCheckoutLine, customers);
 		if(currentCheckoutLine < 3) {
 			currentCheckoutLine++;
 		}
 		else {
 			currentCheckoutLine = 0;
 		}
-		return line;
 	}
 	
 	/**
