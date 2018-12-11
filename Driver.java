@@ -1,9 +1,20 @@
 import java.util.*;
 import java.io.*;
 
+/**
+ * The class that runs the program.
+ * 
+ * @author Kaitlyn Myers, Jared Tebbi
+ * @version 2018.12.10
+ */
 public class Driver {
     static BufferedReader stdin = new BufferedReader (new InputStreamReader(System.in));
 
+    /**
+     * The main of the program. Does not need any arguments.
+     * 
+     * @param args[] an empty array
+     */
     public static void main(String args[]) throws IOException{
     	
     	MyCDLS<Items> i = new MyCDLS<>();
@@ -414,6 +425,11 @@ public class Driver {
     	}
     }
     
+    /**
+     * Prints the name and amount of items at or below the restocking level.
+     * 
+     * @param sc the shopping center that contains the list of items
+     */
     private static void printItems(ShoppingCenter sc) {
     	MyCDLS<Items> items = sc.getItems();
     	int restock = items.get(0).getRestock();
@@ -428,6 +444,12 @@ public class Driver {
 	    }
     }
 
+    /**
+     * Reorders a specified item. Cannot restock less than 1 item, and the item name must be in the list of items.
+     * 
+     * @param sc the shopping center that contains the list of items
+     * @return the possibly updated shopping center
+     */
     private static ShoppingCenter reorderItem(ShoppingCenter sc) throws IOException {
 	    System.out.print("Name the item to be reordered: ");
 	    String itemName = stdin.readLine().trim();
