@@ -118,19 +118,48 @@ public class Driver {
     	}
 
 
-	private static int searchItems(ListCDLBased<Item> items, String itemName) {
+    /**
+     * Searches a list of items by an item's name, and returns the index where that item is. 
+     *
+     * @param items the list of items to be searched
+     * @param itemName the name of the item that will be used to search the list
+     * @return the index in the list where the item with the name resides, or -1 if the item is not in the list
+     */
+    private static int searchItems(MyCDLS<Items> items, String itemName) {
+	    int result = -1;
+	    String key = "";
+	    for(int i = 0; i < items.size(); i++) {
+		    key = (String) items.get(i).getName();
+		    if(key.equals(itemName)) {
+			    result = i;
+			    i = items.size();
+		    }
+
+	    }
+	    return result;
+    }
+	
+    /**
+     * Searches a list of customers by an customer's name, and returns the index where that customer is in the list.
+     *
+     * @param customers the list of customers to be searched
+     * @param customerName the name of the customer that will be used to search the list
+     * @return the index in the list where the customer with the name resides, or -1 if the customer is not in the list
+     */
+    private static int searchCustomers(MyCDLS<Customer> customers, String customerName) {
             int result = -1;
             String key = "";
-            for(int i = 0; i < items.size(); i++) {
-                    key = (String) items.get(i).getName();
-                    if(key.equals(item)) {
+            for(int i = 0; i < customers.size(); i++) {
+                    key = (String) customers.get(i).getName();
+                    if(customerName.equals(key)) {
                             result = i;
-                            i = list.size();
+                            i = customers.size();
                     }
 
             }
             return result;
-    	}
+    }
+
 	
 	private static int searchName(String name, MyCDLS sc) //Kaitlyn's search method
 	{
@@ -163,27 +192,44 @@ public class Driver {
 	}
 
 
-    private static ShoppingCenter pickItem(ShoppingCenter sc) {
-            System.out.print("Choose a shopping customer: ");
-            String customerName = stdin.readLine().trim();
-            System.out.println(customer);
-            System.out.print("Choose an item: ");
-            String itemName = stdin.readLine().trim();
-            System.out.println(itemName);
-            int itemNum = items.search(item);
-            if(itemNum >= 0) {
-                    Items item = items.get(itemNum);
-                    if(item.getAmount() > 0) {
-                            item.decrease();
-                    }
-                    else {
-                            System.out.println("Item is out of stock");
-                    }
-            }
-            else {
-                    System.out.println("Item does not exist");
-            }
-            return sc;
+    /**
+     * Picks an item to be placed into a customers shopping cart. The customer may not exist, or the item may not exist or be stocked based on user input. 
+     *
+     * @param sc a shoppingcenter which will contain the customers items that may be updated inside this method.
+     * @return returns a shopping center that may have been updated.
+     */
+    private static ShoppingCenter pickItem(ShoppingCenter sc) throws IOException {
+	    System.out.print("Choose a shopping customer: ");
+	    String customerName = stdin.readLine().trim();
+	    System.out.println(customerName);
+	    System.out.print("Choose an item: ");
+	    String itemName = stdin.readLine().trim();
+	    System.out.println(itemName);
+	    MyCDLS<Items> items = sc.getItems();
+	    int itemNum = searchItems(items, itemName);
+	    if(itemNum >= 0) {
+		    Items item = items.get(itemNum);
+		    if(item.getAmount() > 0) {
+			    ListCDLBased<Customer> customers = sc.getShoppingCustomers();
+			    int customerNum = searchCustomers(customers, customerName);
+			    if(customerNum >= 0) {
+				item.decrease();
+			    	customers.get(customerNum).setNumItems(customers.get(customerNum).getNumItems() + 1);
+				sc.setShoppingCustomers(customers);
+				sc.setItems(items);
+			    }
+			    else {
+				    System.out.println("Customer is not in shopping");
+			    }
+		    }
+		    else {
+			    System.out.println("Item is out of stock");
+		    }
+	    }
+	    else {
+		    System.out.println("Item does not exist");
+	    }
+	    return sc;
     }
 	
 	private static void removeItem(ShoppingCenter sc) throws IOException
@@ -221,34 +267,63 @@ public class Driver {
     	}
 
 
-    private static ShoppingCenter finishShopping(ShoppingCenter sc) {
+    /**
+     * The first customer to have entered the shopping center finishes shopping. 
+     * If the customer has 0 items, they will be asked if they want to continue shopping. 
+     * If yes, they are put back into the line and their time is reset. If no, the customer 
+     * will leave the shopping center.
+     * If the customer has more than 1 item, they will be put in a checkout line.
+     * If the customer has less or equal to 4 items, they will be put in the express line, 
+     * unless the express line is twice as long as a regular line, where the customer will 
+     * then enter the shortest regular line.
+     * If the customer has more than 4 items, they will be put into the shortest regular line.
+     *
+     * @param sc the shopping center which contains the list of customers shopping and checking out, which may be updated
+     * @return a shopping center that may have been updated.
+     */
+    private static ShoppingCenter finishShopping(ShoppingCenter sc) throws IOException {
+	    //make the use be able to decide which checkout line is first
+	    MyCDLS<Customer> shoppingCustomers = sc.getShoppingCustomers();
 	    if(!shoppingCustomers.isEmpty()) {
-		    Customer customer = ShoppingCustomers.get(0);
-		    if(customer.getTime == time) {
-			    System.out.print("Would you like to continue shopping? (Y/N): ");
-			    String choice = stdin.readLine.trim();
+		    Customer customer = shoppingCustomers.get(0);
+		    if(customer.getNumItems() == 0) {
+			    System.out.print("You have no items. Would you like to continue shopping? (Y/N): ");
+			    String choice = stdin.readLine().trim();
 			    System.out.println(choice);
-			    if(choice == "Y") {
+			    if(choice.equals("Y")) {
 				    shoppingCustomers.add(shoppingCustomers.size(), customer);
-				    shoppingCustomers.remove(0);
+				    System.out.println("First customer reentered the shopping area");
 			    }
 			    else {
-				    if(customer.getNumItems <= 4) {
-					    checkoutLines.get(0).add(customer);
-					    System.out.println("Customer added to express checkout line.");
-				    }
-				    else if(checkoutLines.get(1).size() < checkoutLines.get(2).size()) {
-					    checkoutLines.get(1).add(customer);
-					    System.out.println("Customer added to express checkout line 1.");
-				    }
-				    else {
-					    checkoutLines.get(2).add(customer);
-					    System.out.println("Customer added to express checkout line 2.");
-				    }
+				    System.out.println("The first customer left the store");
 			    }
-			    shoppingCustomers.remove(0);
+			    //if N removes customer from store (look way down). 
+			    //if Y removes customer from front of line after putting them at the back.
+		    }	    
+		    else {
+			    MyCDLS<QueueRA<Customer>> checkoutLines = sc.getCheckoutLines();
+			    if((customer.getNumItems()) <= 4 && (2*checkoutLines.get(0).size() < checkoutLines.get(1).size()) && (2*checkoutLines.get(0).size() < checkoutLines.get(2).size())) {
+				    checkoutLines.get(0).enqueue(customer);
+				    System.out.println("Customer added to express checkout line.");
+			    }
+			    else if(checkoutLines.get(1).size() < checkoutLines.get(2).size()) {
+				    checkoutLines.get(1).enqueue(customer);
+				    System.out.println("Customer added to express checkout line 1.");
+			    }
+			    else {
+				    checkoutLines.get(2).enqueue(customer);
+				    System.out.println("Customer added to express checkout line 2.");
+			    }
+			    sc.setCheckoutLines(checkoutLines);
 		    }
-	    }    
+		    shoppingCustomers.remove(0);
+		    
+	    }
+	    else {
+		    System.out.println("There are no customer shopping!");
+	    }
+	    sc.setShoppingCustomers(shoppingCustomers);
+	    return sc;
     }
 	
 	private static void printCustomers(ShoppingCenter sc)
@@ -274,9 +349,11 @@ public class Driver {
     	}
 
     private static void printItems(ShoppingCenter sc) {
+	    MyCDLS<Items> items = sc.getItems();
 	    System.out.println("Printing items...");
 	    for(int i = 0; i < items.size(); i++) {
-		    System.out.print(item.printItems() + " ");
+		    items.get(i).printItems();
+		    System.out.print(" ");
 	    }
     }
 	
@@ -294,13 +371,14 @@ public class Driver {
 	    	}
     	}
 
-    private static ShoppingCenter reorderItem(ShoppingCenter sc) {
+    private static ShoppingCenter reorderItem(ShoppingCenter sc) throws IOException {
 	    System.out.print("Name the item to be reordered: ");
 	    String itemName = stdin.readLine().trim();
 	    System.out.println(itemName);
 	    System.out.print("Specify the restocking amount: ");
 	    int restockNum = Integer.parseInt(stdin.readLine().trim());
-	    int itemIndex = items.search(itemName);
+	    ListCDLBased<Items> items = sc.getItems();
+	    int itemIndex = searchItems(items, itemName);
 	    if(restockNum > 0) {
 	    	if(itemIndex >= 0) {
 			items.get(itemIndex).restock(restockNum);
