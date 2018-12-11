@@ -1,5 +1,8 @@
 /**
  * This ADT is a Circularly Doubly Linked Structure. It is node based.
+ * 
+ * @author Kaitlyn Myers
+ * @version 2018.12.03
  */
 public class MyCDLS<T> implements ListInterface<T>{
 
