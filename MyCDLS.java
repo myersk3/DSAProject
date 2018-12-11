@@ -1,27 +1,46 @@
-
-
+/**
+ * This ADT is a Circularly Doubly Linked Structure. It is node based.
+ */
 public class MyCDLS<T> implements ListInterface<T>{
 
 	//Made generic class
 	private DNode<T> tail;
 	private int numItems;
 	
+	/**
+	 * Constructs an empty list.
+	 */ 
 	public MyCDLS()
 	{
 		numItems = 0;
 		tail = null;
 	} // end default constructor
 	
+	/** 
+	 * Returns true if this list is empty, and false otherwise.
+	 * 
+	 * @return true if this list is empty
+	 */
 	public boolean isEmpty() 
 	{
 		return numItems == 0;
 	} // end isEmpty
 
+	/** 
+	 * Returns the size of this list.
+	 * 
+	 * @return the size of this list
+	 */
 	public int size() 
 	{
   		return numItems;
 	} // end size
 	
+	/** 
+	 * Finds and returns the item at the specified index.
+	 * 
+	 * @returns the item at the specified index
+	 */
   	private DNode<T> oldFind(int index) 
   	{
   		DNode<T> curr = tail.getNext();
@@ -32,6 +51,11 @@ public class MyCDLS<T> implements ListInterface<T>{
   		return curr;
   	} // end find
   	
+	/** 
+	 * Finds and returns the item at the specified index
+	 * 
+	 * @return the item at the specified index.
+	 */
   	private DNode<T> newFind(int index)
   	{
   		int middle = numItems/2;
@@ -55,6 +79,12 @@ public class MyCDLS<T> implements ListInterface<T>{
   		}
   	}
 
+	/** 
+	 * Adds the specified item at the specified index of the list.
+	 * 
+	 * @param index the index the item will be inserted into
+	 * @param item the item that will be added to the list
+	 */
 	public void add(int index, T item) 
 			throws ListIndexOutOfBoundsException 
 	{
@@ -103,6 +133,12 @@ public class MyCDLS<T> implements ListInterface<T>{
 		
 	} // end add
 
+	/** 
+	 * Returns the object at the specified index.
+	 * 
+	 * @param index the index at which the object is located
+	 * @return 	the object that is found
+	 */
 	public T get(int index) 
 			throws ListIndexOutOfBoundsException 
 	{
@@ -120,6 +156,11 @@ public class MyCDLS<T> implements ListInterface<T>{
   		} // end if
 	}
 
+	/** 
+	 * Deletes an object from the list at the specified index.
+	 * 
+	 * @param index the index of the item to be removed
+	 */
 	public void remove(int index) 
 			throws ListIndexOutOfBoundsException 
 	{
@@ -158,12 +199,20 @@ public class MyCDLS<T> implements ListInterface<T>{
   		} // end if
 	} // end remove
 
+	/** 
+	 * Removes all objects from this list.
+	 */
 	public void removeAll() 
 	{
 		tail = null;
 		numItems = 0;
 	} //end removeAll
 	
+	/** 
+	 * Returns the string representation of this list.
+	 * 
+	 * @return the string representation of this list
+	 */
 	public String toString()
   	{
 		if(size() == 1)
