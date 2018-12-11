@@ -2,7 +2,7 @@
  * A node with two links.
  *
  * @author: Jared Tebbi
- * @version: 2018.10.02
+ * @version: 2018.12.10
  */
 public class DNode<T> 
 {
